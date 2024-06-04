@@ -15,4 +15,6 @@ public interface Message {
   String INVALID_PHONE = "유효하지 않은 휴대폰 번호 형식입니다.";
   String DUPLICATE_EMAIL = "이미 가입된 이메일입니다.";
   String DUPLICATE_NICKNAME = "이미 가입된 닉네임입니다.";
+  String LOGIN_SUCCESS = "로그인 성공했습니다.";
+  String NOT_MATCH_LOGIN_DTO = "email 또는 password가 일치하지 않습니다.";
 }
