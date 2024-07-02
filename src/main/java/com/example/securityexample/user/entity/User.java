@@ -31,6 +31,7 @@ public class User {
   private String phone;
   @Column(unique = true, nullable = false)
   private String nickname;
+  @Column(nullable = false)
   private String address;
   @ManyToOne
   @JoinColumn(name = "BOROUGH_ID")
