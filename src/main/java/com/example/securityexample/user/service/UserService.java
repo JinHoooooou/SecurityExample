@@ -4,7 +4,6 @@ import com.example.securityexample.borough.entity.Borough;
 import com.example.securityexample.borough.repository.BoroughRepository;
 import com.example.securityexample.global.constants.Message;
 import com.example.securityexample.global.exception.DuplicateResourceException;
-import com.example.securityexample.global.exception.InvalidFieldException;
 import com.example.securityexample.user.dto.LoginDto;
 import com.example.securityexample.user.dto.SignUpRequestDto;
 import com.example.securityexample.user.entity.User;
@@ -33,7 +32,7 @@ public class UserService {
     User user = signUpRequestDto.toEntity(passwordEncoder);
     Borough borough = this.boroughRepository
         .findByName(user.extractBoroughName())
-        .orElseThrow(() -> new InvalidFieldException("address", Message.INVALID_ADDRESS));
+        .orElseThrow(() -> new ResourceNotFoundException(Message.INVALID_ADDRESS));
     user.setBorough(borough);
     this.userRepository.save(user);
   }
