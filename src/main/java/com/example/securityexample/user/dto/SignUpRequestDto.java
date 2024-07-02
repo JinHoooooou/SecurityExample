@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpDto {
+public class SignUpRequestDto {
 
   @Pattern(regexp = Regexp.EMAIL, message = Message.INVALID_EMAIL)
   private String email;

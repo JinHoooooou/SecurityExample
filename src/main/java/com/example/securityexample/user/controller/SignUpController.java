@@ -1,7 +1,7 @@
 package com.example.securityexample.user.controller;
 
 import com.example.securityexample.global.constants.Message;
-import com.example.securityexample.user.dto.SignUpDto;
+import com.example.securityexample.user.dto.SignUpRequestDto;
 import com.example.securityexample.user.service.UserService;
 import jakarta.validation.Valid;
 import java.util.Map;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/signup")
+@RequestMapping("/api/v1/signup1")
 public class SignUpController {
 
   private final UserService userService;
 
   @PostMapping(value = "", produces = "application/json;charset=UTF-8")
-  public ResponseEntity<Map<String, String>> signUp(@RequestBody @Valid SignUpDto signUpDto) {
-    userService.createNewUser(signUpDto);
+  public ResponseEntity<Map<String, String>> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
+    userService.createNewUser(signUpRequestDto);
 
     return ResponseEntity
         .status(HttpStatus.CREATED)

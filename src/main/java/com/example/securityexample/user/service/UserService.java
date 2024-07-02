@@ -6,7 +6,7 @@ import com.example.securityexample.global.constants.Message;
 import com.example.securityexample.global.exception.DuplicateResourceException;
 import com.example.securityexample.global.exception.InvalidFieldException;
 import com.example.securityexample.user.dto.LoginDto;
-import com.example.securityexample.user.dto.SignUpDto;
+import com.example.securityexample.user.dto.SignUpRequestDto;
 import com.example.securityexample.user.entity.User;
 import com.example.securityexample.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +22,15 @@ public class UserService {
   private final BoroughRepository boroughRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public void createNewUser(SignUpDto signUpDto) {
-    if (alreadyExistEmail(signUpDto.getEmail())) {
+  public void createNewUser(SignUpRequestDto signUpRequestDto) {
+    if (alreadyExistEmail(signUpRequestDto.getEmail())) {
       throw new DuplicateResourceException(Message.DUPLICATE_EMAIL);
     }
-    if (alreadyExistNickname(signUpDto.getNickname())) {
+    if (alreadyExistNickname(signUpRequestDto.getNickname())) {
       throw new DuplicateResourceException(Message.DUPLICATE_NICKNAME);
     }
 
-    User user = signUpDto.toEntity(passwordEncoder);
+    User user = signUpRequestDto.toEntity(passwordEncoder);
     Borough borough = this.boroughRepository
         .findByName(user.extractBoroughName())
         .orElseThrow(() -> new InvalidFieldException("address", Message.INVALID_ADDRESS));
