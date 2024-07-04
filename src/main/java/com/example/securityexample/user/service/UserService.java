@@ -4,7 +4,6 @@ import com.example.securityexample.borough.entity.Borough;
 import com.example.securityexample.borough.repository.BoroughRepository;
 import com.example.securityexample.global.constants.Message;
 import com.example.securityexample.global.exception.DuplicateResourceException;
-import com.example.securityexample.user.dto.LoginDto;
 import com.example.securityexample.user.dto.SignUpRequestDto;
 import com.example.securityexample.user.entity.User;
 import com.example.securityexample.user.repository.UserRepository;
@@ -35,17 +34,6 @@ public class UserService {
         .orElseThrow(() -> new ResourceNotFoundException(Message.INVALID_ADDRESS));
     user.setBorough(borough);
     this.userRepository.save(user);
-  }
-
-  public User login(LoginDto loginDto) {
-    User user = userRepository.findByEmail(loginDto.getEmail())
-        .orElseThrow(() -> new ResourceNotFoundException(Message.NOT_MATCH_LOGIN_DTO));
-
-    if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-      throw new ResourceNotFoundException(Message.NOT_MATCH_LOGIN_DTO);
-    }
-
-    return user;
   }
 
   private boolean alreadyExistEmail(String email) {
