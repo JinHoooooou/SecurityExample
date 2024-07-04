@@ -1,6 +1,5 @@
 package com.example.securityexample.user.dto;
 
-
 import com.example.securityexample.global.constants.Message;
 import com.example.securityexample.global.constants.Regexp;
 import jakarta.validation.constraints.NotNull;
