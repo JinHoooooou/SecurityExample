@@ -20,6 +20,10 @@ public class JsonLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandl
     response.setStatus(HttpServletResponse.SC_OK);
     response.setContentType(RESPONSE_CONTENT_TYPE);
 
-    response.getWriter().write(SUCCESS_MESSAGE + authentication.getName());
+    HttpSession session = request.getSession();
+    session.setAttribute("authenticatedUser", authentication.getPrincipal());
+
+    new ObjectMapper().writeValue(response.getWriter(),
+        LoginResponseDto.builder().message(SUCCESS_MESSAGE + authentication.getName()).build());
   }
 }

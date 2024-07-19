@@ -18,6 +18,8 @@ public class JsonLoginFailureHandler extends SimpleUrlAuthenticationFailureHandl
       AuthenticationException exception) throws IOException {
     response.setContentType(RESPONSE_CONTENT_TYPE);
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    response.getWriter().write(exception.getLocalizedMessage());
+
+    new ObjectMapper().writeValue(response.getWriter(),
+        LoginResponseDto.builder().message(Message.NOT_MATCH_LOGIN_DTO).build());
   }
 }
