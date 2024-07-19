@@ -1,7 +1,10 @@
-package com.example.securityexample.global.handler;
+package com.example.securityexample.auth.handler;
 
+import com.example.securityexample.auth.dto.LoginResponseDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;

@@ -1,8 +1,7 @@
-package com.example.securityexample.global.filter;
+package com.example.securityexample.auth.filter;
 
-import com.example.securityexample.user.dto.LoginDto;
+import com.example.securityexample.auth.dto.LoginRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
@@ -40,26 +39,26 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
       throw new AuthenticationServiceException("Not Supported Content-Type: " + request.getContentType());
     }
 
-    LoginDto loginDto = parseDto(request);
-    return getAuthentication(loginDto);
+    LoginRequestDto loginRequestDto = parseDto(request);
+    return getAuthentication(loginRequestDto);
   }
 
-  private LoginDto parseDto(HttpServletRequest request) throws IOException {
+  private LoginRequestDto parseDto(HttpServletRequest request) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
-    Set<ConstraintViolation<LoginDto>> violations = validator.validate(loginDto);
+    LoginRequestDto loginRequestDto = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
+    Set<ConstraintViolation<LoginRequestDto>> violations = validator.validate(loginRequestDto);
     if (!violations.isEmpty()) {
       Map<String, String> errorMap = violations
           .stream()
           .collect(Collectors.toMap(k -> k.getPropertyPath().toString(), ConstraintViolation::getMessage));
       throw new AuthenticationServiceException(objectMapper.writeValueAsString(errorMap));
     }
-    return loginDto;
+    return loginRequestDto;
   }
 
-  private Authentication getAuthentication(LoginDto loginDto) {
+  private Authentication getAuthentication(LoginRequestDto loginRequestDto) {
     UsernamePasswordAuthenticationToken authentication =
-        UsernamePasswordAuthenticationToken.unauthenticated(loginDto.getEmail(), loginDto.getPassword());
+        UsernamePasswordAuthenticationToken.unauthenticated(loginRequestDto.getEmail(), loginRequestDto.getPassword());
     return this.getAuthenticationManager().authenticate(authentication);
   }
 

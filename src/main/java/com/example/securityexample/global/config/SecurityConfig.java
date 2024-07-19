@@ -1,10 +1,10 @@
 package com.example.securityexample.global.config;
 
-import com.example.securityexample.global.filter.JsonLoginFilter;
-import com.example.securityexample.global.handler.JsonLoginFailureHandler;
-import com.example.securityexample.global.handler.JsonLoginSuccessHandler;
+import com.example.securityexample.auth.filter.JsonLoginFilter;
+import com.example.securityexample.auth.handler.JsonLoginFailureHandler;
+import com.example.securityexample.auth.handler.JsonLoginSuccessHandler;
+import com.example.securityexample.auth.service.AuthService;
 import jakarta.validation.Validator;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +16,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -31,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final Validator validator;
+  private final AuthService authService;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -59,12 +57,7 @@ public class SecurityConfig {
   @Bean
   public AuthenticationManager authenticationManager() {
     DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-    User tempUser = new User(
-        "jinho4744@naver.com",
-        new BCryptPasswordEncoder().encode("12345678"),
-        Collections.singleton(new SimpleGrantedAuthority("read"))
-    );
-    authenticationProvider.setUserDetailsService(new InMemoryUserDetailsManager(tempUser));
+    authenticationProvider.setUserDetailsService(authService);
     authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
 
     return new ProviderManager(authenticationProvider);
