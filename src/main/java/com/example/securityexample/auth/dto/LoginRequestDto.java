@@ -1,4 +1,4 @@
-package com.example.securityexample.user.dto;
+package com.example.securityexample.auth.dto;
 
 import com.example.securityexample.global.constants.Message;
 import com.example.securityexample.global.constants.Regexp;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginDto {
+public class LoginRequestDto {
 
   @NotNull(message = Message.INVALID_EMAIL)
   @Pattern(regexp = Regexp.EMAIL, message = Message.INVALID_EMAIL)
