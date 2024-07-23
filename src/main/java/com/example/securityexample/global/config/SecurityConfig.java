@@ -4,6 +4,7 @@ import com.example.securityexample.auth.filter.JsonLoginFilter;
 import com.example.securityexample.auth.handler.JsonLoginFailureHandler;
 import com.example.securityexample.auth.handler.JsonLoginSuccessHandler;
 import com.example.securityexample.auth.service.AuthService;
+import com.example.securityexample.user.repository.UserRepository;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ public class SecurityConfig {
 
   private final Validator validator;
   private final AuthService authService;
+  private final UserRepository userRepository;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -65,7 +67,7 @@ public class SecurityConfig {
 
   @Bean
   public JsonLoginSuccessHandler jsonLoginSuccessHandler() {
-    return new JsonLoginSuccessHandler();
+    return new JsonLoginSuccessHandler(userRepository);
   }
 
   @Bean
