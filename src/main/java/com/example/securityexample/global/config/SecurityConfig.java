@@ -1,11 +1,11 @@
 package com.example.securityexample.global.config;
 
 import com.example.securityexample.auth.filter.JsonLoginFilter;
+import com.example.securityexample.auth.filter.JwtAuthorizationFilter;
 import com.example.securityexample.auth.handler.JsonLoginFailureHandler;
 import com.example.securityexample.auth.handler.JsonLoginSuccessHandler;
 import com.example.securityexample.auth.service.AuthService;
 import com.example.securityexample.auth.service.JwtService;
-import com.example.securityexample.user.repository.UserRepository;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -44,10 +44,12 @@ public class SecurityConfig {
     httpSecurity.authorizeHttpRequests(requests -> requests
         .requestMatchers(HttpMethod.POST, "/api/v1/login", "/api/v1/signup").permitAll()
         .requestMatchers("/h2-console/**").permitAll()
+        .requestMatchers("/api/v1/users/my-info").authenticated()
         .requestMatchers("/").permitAll()
     );
 
-    httpSecurity.addFilterBefore(jsonLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+    httpSecurity.addFilterAt(jsonLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+    httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JsonLoginFilter.class);
 
     return httpSecurity.build();
   }
@@ -83,5 +85,10 @@ public class SecurityConfig {
     loginFilter.setAuthenticationSuccessHandler(jsonLoginSuccessHandler());
     loginFilter.setAuthenticationFailureHandler(jsonLoginFailureHandler());
     return loginFilter;
+  }
+
+  @Bean
+  public JwtAuthorizationFilter jwtAuthorizationFilter() {
+    return new JwtAuthorizationFilter(jwtService);
   }
 }
