@@ -6,6 +6,7 @@ import com.example.securityexample.auth.handler.JsonLoginFailureHandler;
 import com.example.securityexample.auth.handler.JsonLoginSuccessHandler;
 import com.example.securityexample.auth.service.AuthService;
 import com.example.securityexample.auth.service.JwtService;
+import com.example.securityexample.global.handler.CustomAuthenticationEntryPoint;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,7 @@ public class SecurityConfig {
   private final Validator validator;
   private final AuthService authService;
   private final JwtService jwtService;
+  private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -47,6 +49,8 @@ public class SecurityConfig {
         .requestMatchers("/api/v1/users/my-info").authenticated()
         .requestMatchers("/").permitAll()
     );
+
+    httpSecurity.exceptionHandling(handler -> handler.authenticationEntryPoint(customAuthenticationEntryPoint));
 
     httpSecurity.addFilterAt(jsonLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JsonLoginFilter.class);
