@@ -38,6 +38,9 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
     if (!isApplicationJson(request.getContentType())) {
       throw new AuthenticationServiceException("Not Supported Content-Type: " + request.getContentType());
     }
+    if (existAuthorizationInHeader(request)) {
+      throw new AuthenticationServiceException("Authorization이 있기 때문에 로그인 요청을 할 수 없습니다.");
+    }
 
     LoginRequestDto loginRequestDto = parseDto(request);
     return getAuthentication(loginRequestDto);
@@ -60,6 +63,10 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
     UsernamePasswordAuthenticationToken authentication =
         UsernamePasswordAuthenticationToken.unauthenticated(loginRequestDto.getEmail(), loginRequestDto.getPassword());
     return this.getAuthenticationManager().authenticate(authentication);
+  }
+
+  private boolean existAuthorizationInHeader(HttpServletRequest request) {
+    return request.getHeader("Authorization") != null;
   }
 
   private boolean isApplicationJson(String contentType) {

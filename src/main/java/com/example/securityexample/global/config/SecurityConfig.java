@@ -44,13 +44,14 @@ public class SecurityConfig {
         .headers(frame -> frame.frameOptions(FrameOptionsConfig::sameOrigin));
 
     httpSecurity.authorizeHttpRequests(requests -> requests
-        .requestMatchers(HttpMethod.POST, "/api/v1/login", "/api/v1/signup").permitAll()
-        .requestMatchers("/h2-console/**").permitAll()
-        .requestMatchers("/api/v1/users/my-info").authenticated()
-        .requestMatchers("/").permitAll()
-    );
+        .requestMatchers(HttpMethod.GET, "/h2-console/**", "/", "/api/v1/tests/books/list").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/v1/signup").anonymous()
+        .requestMatchers(HttpMethod.POST, "/api/v1/tests/books").authenticated()
+        .requestMatchers(HttpMethod.GET, "/api/v1/tests/users/my-info").authenticated()
+        .requestMatchers(HttpMethod.PATCH, "/api/v1/tests/books/{isbn}").hasAuthority("ADMIN"));
 
-    httpSecurity.exceptionHandling(handler -> handler.authenticationEntryPoint(customAuthenticationEntryPoint));
+    httpSecurity.exceptionHandling(handler -> handler
+        .authenticationEntryPoint(customAuthenticationEntryPoint));
 
     httpSecurity.addFilterAt(jsonLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JsonLoginFilter.class);

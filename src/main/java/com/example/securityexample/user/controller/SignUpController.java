@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/signup")
 public class SignUpController {
 
+  // 인증하지 않은 상태에서만 사용 가능한 API
+
   private final UserService userService;
 
   @PostMapping(value = "", produces = "application/json;charset=UTF-8")
