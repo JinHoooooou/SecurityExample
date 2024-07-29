@@ -39,7 +39,7 @@ public class JsonLoginFilter extends AbstractAuthenticationProcessingFilter {
       throw new AuthenticationServiceException("Not Supported Content-Type: " + request.getContentType());
     }
     if (existAuthorizationInHeader(request)) {
-      throw new AuthenticationServiceException("Authorization이 있기 때문에 로그인 요청을 할 수 없습니다.");
+      throw new AuthenticationServiceException("Header에 Authorization이 포함되어 로그인 API 요청이 불가능합니다.");
     }
 
     LoginRequestDto loginRequestDto = parseDto(request);

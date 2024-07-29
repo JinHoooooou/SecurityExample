@@ -6,6 +6,7 @@ import com.example.securityexample.auth.handler.JsonLoginFailureHandler;
 import com.example.securityexample.auth.handler.JsonLoginSuccessHandler;
 import com.example.securityexample.auth.service.AuthService;
 import com.example.securityexample.auth.service.JwtService;
+import com.example.securityexample.global.handler.CustomAccessDeniedHandler;
 import com.example.securityexample.global.handler.CustomAuthenticationEntryPoint;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class SecurityConfig {
   private final AuthService authService;
   private final JwtService jwtService;
   private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+  private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -48,10 +50,12 @@ public class SecurityConfig {
         .requestMatchers(HttpMethod.POST, "/api/v1/signup").anonymous()
         .requestMatchers(HttpMethod.POST, "/api/v1/tests/books").authenticated()
         .requestMatchers(HttpMethod.GET, "/api/v1/tests/users/my-info").authenticated()
-        .requestMatchers(HttpMethod.PATCH, "/api/v1/tests/books/{isbn}").hasAuthority("ADMIN"));
+        .requestMatchers(HttpMethod.PATCH, "/api/v1/tests/books/{isbn}").hasAuthority("ADMIN")
+    );
 
     httpSecurity.exceptionHandling(handler -> handler
-        .authenticationEntryPoint(customAuthenticationEntryPoint));
+        .authenticationEntryPoint(customAuthenticationEntryPoint)
+        .accessDeniedHandler(customAccessDeniedHandler));
 
     httpSecurity.addFilterAt(jsonLoginFilter(), UsernamePasswordAuthenticationFilter.class);
     httpSecurity.addFilterBefore(jwtAuthorizationFilter(), JsonLoginFilter.class);
