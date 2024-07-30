@@ -33,6 +33,7 @@ public class User {
   private String nickname;
   @Column(nullable = false)
   private String address;
+  private String authority;
   @ManyToOne
   @JoinColumn(name = "BOROUGH_ID")
   private Borough borough;

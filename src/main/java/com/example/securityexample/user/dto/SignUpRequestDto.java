@@ -41,6 +41,7 @@ public class SignUpRequestDto {
         .password(passwordEncoder.encode(this.password))
         .address(this.address)
         .phone(this.phone)
+        .authority("USER")
         .build();
   }
 }
